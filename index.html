@@ -3,61 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meta Ads Architect v3.0</title>
+    <title>Meta Ads Architect v4.0</title>
     <style>
-        :root { --meta-blue: #1877f2; --bg: #0f0f0f; --card: #1e1e1e; --text: #fff; --accent: #00e676; --gold: #ffd700; }
+        :root { --meta-blue: #1877f2; --bg: #0f0f0f; --card: #1e1e1e; --text: #fff; --accent: #00e676; --notification: #ff3b30; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
-        .app-shell { max-width: 1100px; margin: 0 auto; background: var(--card); border: 1px solid #333; border-radius: 16px; padding: 30px; box-shadow: 0 10px 50px rgba(0,0,0,0.7); }
+        .app-shell { max-width: 1200px; margin: 0 auto; background: var(--card); border: 1px solid #333; border-radius: 16px; padding: 25px; box-shadow: 0 10px 50px rgba(0,0,0,0.8); }
 
         /* Header */
         h1 { text-align: center; margin-top: 0; background: linear-gradient(90deg, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-        .badge { background: #222; border: 1px solid #444; padding: 4px 12px; border-radius: 20px; font-size: 11px; text-transform: uppercase; color: var(--meta-blue); font-weight: bold; }
-        .usage-bar { text-align: center; font-size: 12px; color: #666; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+        .usage-bar { text-align: center; font-size: 12px; color: #666; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
 
         /* Grid Layout */
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
         
         /* Inputs */
         label { display: block; margin-top: 15px; font-size: 11px; color: #888; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-        input, textarea, select { width: 100%; padding: 14px; background: #0a0a0a; border: 1px solid #333; color: #fff; border-radius: 8px; margin-top: 6px; box-sizing: border-box; font-family: inherit; transition: 0.2s; }
-        input:focus, textarea:focus, select:focus { border-color: var(--meta-blue); outline: none; box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2); }
+        input, select { width: 100%; padding: 14px; background: #0a0a0a; border: 1px solid #333; color: #fff; border-radius: 8px; margin-top: 6px; box-sizing: border-box; font-family: inherit; transition: 0.2s; }
+        input:focus, select:focus { border-color: var(--meta-blue); outline: none; }
 
         /* Generate Button */
         .btn-generate { width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 25px; background: linear-gradient(45deg, var(--meta-blue), #006aff); color: white; text-transform: uppercase; transition: 0.2s; }
         .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(24, 119, 242, 0.4); }
-        .btn-generate:disabled { background: #444; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-generate:disabled { background: #444; cursor: not-allowed; }
 
-        /* Output Area */
-        .output-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; margin-top: 40px; display: none; }
+        /* Tabs System */
+        .tabs { display: flex; gap: 10px; margin-top: 30px; border-bottom: 2px solid #333; }
+        .tab-btn { flex: 1; padding: 15px; background: transparent; border: none; color: #888; cursor: pointer; font-weight: bold; font-size: 14px; position: relative; transition: 0.3s; }
+        .tab-btn:hover { color: #fff; background: #252525; }
+        .tab-btn.active { color: var(--meta-blue); border-bottom: 3px solid var(--meta-blue); background: #252525; }
         
-        /* Strategy Card */
+        /* Notification Dot */
+        .has-data::after { content: ''; position: absolute; top: 10px; right: 20px; width: 8px; height: 8px; background: var(--notification); border-radius: 50%; animation: popIn 0.3s ease; }
+        @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+        /* Content Sections */
+        .tab-content { display: none; padding-top: 20px; animation: fadeIn 0.4s; }
+        .tab-content.active { display: grid; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* TAB 1: STRATEGY LAYOUT */
+        .strategy-grid { grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
         .strategy-card { background: #111; padding: 25px; border-radius: 12px; border: 1px solid #333; height: fit-content; }
         .data-row { margin-bottom: 20px; }
-        .data-label { color: var(--meta-blue); font-size: 11px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 1px; }
+        .data-label { color: var(--meta-blue); font-size: 11px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px; }
         .data-value { font-size: 14px; color: #ddd; white-space: pre-wrap; background: #1a1a1a; padding: 12px; border-radius: 6px; border: 1px solid #2a2a2a; line-height: 1.6; }
         
-        /* Script Box */
-        .script-box { background: #1a1a1a; padding: 15px; border-left: 4px solid var(--accent); border-radius: 6px; margin-top: 20px; font-family: monospace; font-size: 13px; color: #ccc; white-space: pre-wrap; }
+        /* Conversion Badge */
+        .conv-badge { display: inline-block; background: rgba(0, 230, 118, 0.1); color: var(--accent); padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; border: 1px solid var(--accent); margin-bottom: 10px; }
 
         /* Ad Mockup */
-        .mockup-container { position: sticky; top: 20px; }
         .ad-preview { background: #fff; color: #000; border-radius: 8px; overflow: hidden; max-width: 400px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: Helvetica, Arial, sans-serif; border: 1px solid #ccc; }
         .ad-header { padding: 12px; display: flex; align-items: center; }
-        .ad-avatar { width: 40px; height: 40px; background: linear-gradient(45deg, #ddd, #eee); border-radius: 50%; margin-right: 10px; }
-        .ad-brand-name { font-weight: bold; font-size: 14px; color: #050505; }
-        .ad-sponsored { font-size: 12px; color: #65676b; }
-        .ad-text-top { padding: 0 12px 12px 12px; font-size: 14px; line-height: 1.4; color: #050505; white-space: pre-line; }
-        .ad-image-container { width: 100%; aspect-ratio: 1/1; background: #f0f2f5; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .ad-avatar { width: 40px; height: 40px; background: #ddd; border-radius: 50%; margin-right: 10px; }
+        .ad-brand-name { font-weight: bold; font-size: 14px; color: #000; }
+        .ad-sponsored { font-size: 12px; color: #666; }
+        .ad-text-top { padding: 0 12px 12px 12px; font-size: 14px; line-height: 1.4; color: #000; white-space: pre-line; }
+        .ad-image-container { width: 100%; aspect-ratio: 1/1; background: #eee; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .ad-image-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .ad-footer { padding: 12px; background: #f0f2f5; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e4e6eb; }
-        .ad-headline-area { flex: 1; margin-right: 15px; }
-        .ad-footer-domain { font-size: 12px; color: #65676b; margin-bottom: 2px; text-transform: lowercase; }
-        .ad-headline { font-weight: bold; font-size: 16px; margin-bottom: 2px; color: #050505; line-height: 1.2; }
-        .ad-desc { font-size: 12px; color: #65676b; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        
-        /* Dynamic CTA Button */
-        .ad-cta-btn { background: #e4e6eb; color: #050505; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 14px; text-decoration: none; white-space: nowrap; transition: 0.2s; border: 1px solid #ccc; }
-        
+        .ad-footer { padding: 12px; background: #f0f2f5; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ddd; }
+        .ad-cta-btn { background: #e4e6eb; color: #000; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 14px; text-decoration: none; border: 1px solid #ccc; }
+
+        /* TAB 2 & 3: COPY BOXES */
+        .copy-container { background: #111; padding: 20px; border-radius: 10px; border: 1px solid #333; position: relative; }
+        .copy-btn { position: absolute; top: 15px; right: 15px; background: var(--meta-blue); color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .content-area { font-family: monospace; color: #ccc; white-space: pre-wrap; font-size: 14px; line-height: 1.6; }
+
         #loader { display: none; text-align: center; color: var(--meta-blue); margin-top: 25px; font-weight: bold; letter-spacing: 1px; animation: pulse 1.5s infinite; }
         @keyframes pulse { 50% { opacity: 0.5; } }
         .error-msg { color: #ff6b6b; background: rgba(255, 107, 107, 0.1); padding: 15px; border-radius: 8px; margin-top: 20px; display: none; text-align: center; border: 1px solid #ff6b6b; }
@@ -67,8 +77,7 @@
 
 <div class="app-shell">
     <div style="text-align: center;">
-        <span class="badge">💎 Meta Ads Architect v3.0</span>
-        <h1>Ad Strategy & Script Engine</h1>
+        <h1>Meta Ads Architect v4.0</h1>
     </div>
 
     <div class="usage-bar">Daily Limit: <span id="used" style="color: var(--success); font-weight: bold;">0</span> / 30 Campaigns</div>
@@ -79,70 +88,69 @@
             <input type="password" id="apiKey" placeholder="Paste your API Key here...">
         </div>
         
-        <div>
-            <label>Product / Service</label>
-            <input type="text" id="topic" placeholder="e.g. AI-Powered Coffee Machine">
-        </div>
-        
-        <div>
-            <label>Target Audience</label>
-            <input type="text" id="audience" placeholder="e.g. Remote workers who love coffee">
+        <div style="grid-column: span 2;">
+            <label>Product / Service (Be Specific)</label>
+            <input type="text" id="topic" placeholder="e.g. High-end Real Estate in Gurgaon starting 5Cr">
         </div>
 
         <div>
-            <label>Campaign Objective</label>
+            <label>Ad Purpose</label>
             <select id="purpose">
-                <option value="Sales / Conversions">💰 Sales / Conversions (Shop Now)</option>
-                <option value="Leads / Signups">📝 Leads / Signups (Sign Up)</option>
-                <option value="Brand Awareness">📢 Brand Awareness (Learn More)</option>
-                <option value="App Installs">📱 App Installs (Install Now)</option>
-                <option value="Traffic">🖱️ Website Traffic (Learn More)</option>
+                <option value="Sales">💰 Maximum Sales</option>
+                <option value="Leads">📝 High Quality Leads</option>
+                <option value="Awareness">📢 Brand Awareness</option>
+                <option value="Traffic">🖱️ Cheap Link Clicks</option>
             </select>
         </div>
 
         <div>
             <label>Ad Language</label>
             <select id="language">
-                <option value="Hinglish (Natural Indian Mix)">🇮🇳 Hinglish (Conversational)</option>
-                <option value="Day-to-Day Hindi">🕉️ Simple Hindi</option>
-                <option value="Global English">🌎 Global English</option>
-                <option value="Simple Marathi">🚩 Simple Marathi</option>
+                <option value="Hinglish">🇮🇳 Hinglish (Natural Mix)</option>
+                <option value="Hindi">🕉️ Day-to-Day Hindi</option>
+                <option value="English">🌎 Global English</option>
             </select>
         </div>
     </div>
 
-    <button class="btn-generate" id="genBtn" onclick="generateAd()">🚀 Generate Ad & Script</button>
+    <button class="btn-generate" id="genBtn" onclick="generateAd()">🚀 Architect Campaign</button>
 
-    <div id="loader">💎 ANALYZING GOALS & WRITING SCRIPT...</div>
+    <div id="loader">💎 ANALYZING AUDIENCE & GENERATING ASSETS...</div>
     <div id="errorBox" class="error-msg"></div>
 
-    <div id="results" class="output-grid">
+    <div class="tabs" id="tabsBar" style="display:none;">
+        <button class="tab-btn active" id="btnTab1" onclick="switchTab('tab1')">📊 Strategy & Mockup</button>
+        <button class="tab-btn" id="btnTab2" onclick="switchTab('tab2')">🎥 Video Script</button>
+        <button class="tab-btn" id="btnTab3" onclick="switchTab('tab3')">🎨 Creative Prompt</button>
+    </div>
+
+    <div id="tab1" class="tab-content strategy-grid active">
         <div class="strategy-card">
-            <h3 style="margin-top:0; color:white; border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:20px;">📊 Strategic Blueprint</h3>
+            <h3 style="margin-top:0; color:white; border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:20px;">Strategic Blueprint</h3>
             
             <div class="data-row">
-                <span class="data-label">Psychological Angle</span>
+                <span class="data-label">Recommended Conversion Path</span>
+                <div id="resConversionPath"></div>
+            </div>
+
+            <div class="data-row">
+                <span class="data-label">Psychological Angle (Hindi Explanation)</span>
                 <div class="data-value" id="resPsychology"></div>
             </div>
 
             <div class="data-row">
-                <span class="data-label">Detailed Targeting</span>
-                <div class="data-value" id="resTargeting"></div>
+                <span class="data-label">AI Generated Audience</span>
+                <div class="data-value" id="resAudience"></div>
             </div>
 
             <div class="data-row">
-                <span class="data-label">🎥 30-Sec Video Script (Reels/Stories)</span>
-                <div class="script-box" id="resScript"></div>
-            </div>
-
-            <div class="data-row">
-                <span class="data-label">Recommended CTA Button</span>
-                <div class="data-value" id="resCTAExplanation" style="font-style: italic; color: #aaa;"></div>
+                <span class="data-label">Ad Format Recommendation</span>
+                <div class="data-value" id="resFormat"></div>
             </div>
         </div>
 
-        <div class="mockup-container">
-            <h3 style="margin-top:0; text-align:center; color:#888; font-size:14px; margin-bottom:15px; letter-spacing:1px;">FEED PREVIEW</h3>
+        <div>
+            <h3 style="margin-top:0; text-align:center; color:#888; font-size:14px; margin-bottom:15px;">LIVE PREVIEW</h3>
             <div class="ad-preview">
                 <div class="ad-header">
                     <div class="ad-avatar"></div>
@@ -151,25 +159,36 @@
                         <div class="ad-sponsored">Sponsored · <span id="langTag"></span></div>
                     </div>
                 </div>
-                
-                <div class="ad-text-top" id="mockupPrimary">Loading Copy...</div>
-                
+                <div class="ad-text-top" id="mockupPrimary">Loading...</div>
                 <div class="ad-image-container">
                     <img id="mockupImg" src="" alt="Ad Creative">
-                    <div id="imgLoader" style="position:absolute; color:#666; font-size:12px; font-weight:bold;">✨ RENDERING VISUAL...</div>
+                    <div id="imgLoader" style="color:#666;">Generating...</div>
                 </div>
-                
                 <div class="ad-footer">
-                    <div class="ad-headline-area">
-                        <div class="ad-footer-domain">yourwebsite.com</div>
-                        <div class="ad-headline" id="mockupHeadline">Headline...</div>
-                        <div class="ad-desc" id="mockupDesc">Link Description...</div>
+                    <div style="flex:1; margin-right:10px;">
+                        <div style="font-size:11px; color:#666;">yourwebsite.com</div>
+                        <div style="font-weight:bold; font-size:15px; line-height:1.2;" id="mockupHeadline">Headline</div>
                     </div>
                     <a href="#" class="ad-cta-btn" id="mockupCTA">Learn More</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <div id="tab2" class="tab-content">
+        <div class="copy-container">
+            <button class="copy-btn" onclick="copyText('resScript')">COPY SCRIPT</button>
+            <div class="content-area" id="resScript"></div>
+        </div>
+    </div>
+
+    <div id="tab3" class="tab-content">
+        <div class="copy-container">
+            <button class="copy-btn" onclick="copyText('resPrompt')">COPY PROMPT</button>
+            <div class="content-area" id="resPrompt"></div>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -177,7 +196,7 @@
 
     window.onload = () => {
         updateUsageUI();
-        const savedKey = localStorage.getItem('_meta_v3_key');
+        const savedKey = localStorage.getItem('_meta_v4_key');
         if (savedKey) document.getElementById('apiKey').value = savedKey;
     };
 
@@ -186,71 +205,82 @@
         document.getElementById('used').innerText = usage;
         if (usage >= MAX_DAILY) {
             document.getElementById('genBtn').disabled = true;
-            document.getElementById('genBtn').innerText = "Daily Limit Reached (30/30)";
+            document.getElementById('genBtn').innerText = "Daily Limit Reached";
         }
     }
 
     function getUsage() {
         const date = new Date().toISOString().split('T')[0];
-        const data = JSON.parse(localStorage.getItem('_meta_v3_usage') || '{}');
+        const data = JSON.parse(localStorage.getItem('_meta_v4_usage') || '{}');
         return data[date] || 0;
     }
 
     function trackUsage() {
         const date = new Date().toISOString().split('T')[0];
-        const data = JSON.parse(localStorage.getItem('_meta_v3_usage') || '{}');
+        const data = JSON.parse(localStorage.getItem('_meta_v4_usage') || '{}');
         data[date] = (data[date] || 0) + 1;
-        localStorage.setItem('_meta_v3_usage', JSON.stringify(data));
+        localStorage.setItem('_meta_v4_usage', JSON.stringify(data));
         updateUsageUI();
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        
+        // Match button to tab
+        if(tabId === 'tab1') document.getElementById('btnTab1').classList.add('active');
+        if(tabId === 'tab2') document.getElementById('btnTab2').classList.add('active');
+        if(tabId === 'tab3') document.getElementById('btnTab3').classList.add('active');
+        
+        // Remove notification dot on click
+        document.getElementById('btn' + tabId.charAt(0).toUpperCase() + tabId.slice(1)).classList.remove('has-data');
     }
 
     async function generateAd() {
         const key = document.getElementById('apiKey').value.trim();
         const topic = document.getElementById('topic').value;
-        const audience = document.getElementById('audience').value || "Broad Audience";
         const purpose = document.getElementById('purpose').value;
         const lang = document.getElementById('language').value;
         
-        if (!key || !topic) return alert("Please enter API Key and Product Topic!");
+        if (!key || !topic) return alert("Please enter API Key and Topic!");
         if (getUsage() >= MAX_DAILY) return alert("Daily limit reached!");
 
-        localStorage.setItem('_meta_v3_key', key);
+        localStorage.setItem('_meta_v4_key', key);
         
         // UI Reset
-        const loader = document.getElementById('loader');
-        const results = document.getElementById('results');
-        const errorBox = document.getElementById('errorBox');
-        
-        loader.style.display = 'block';
-        results.style.display = 'none';
-        errorBox.style.display = 'none';
+        document.getElementById('loader').style.display = 'block';
+        document.getElementById('errorBox').style.display = 'none';
+        document.getElementById('tabsBar').style.display = 'none';
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.getElementById('mockupImg').style.display = 'none';
         document.getElementById('imgLoader').style.display = 'block';
 
-        // Advanced Prompt Logic
-        const prompt = `Act as a Top 1% Meta Ads Expert.
+        // Advanced Logic Prompt
+        const prompt = `Act as a Meta Ads Expert.
         Product: "${topic}"
-        Target Audience: "${audience}"
-        Campaign Goal: "${purpose}"
+        Goal: "${purpose}"
         Language: "${lang}"
         
         TASK:
-        1. Decide the BEST Call-To-Action (CTA) button (e.g. Shop Now, Learn More, Sign Up) based on the Goal.
-        2. Write High-Converting Ad Copy (Primary Text, Headline) in "${lang}".
-        3. Write a 30-Second Video Script (Hook, Body, CTA) for Reels.
-        4. Create a Visual Prompt for the static image creative.
+        1. Define the best Target Audience for this product automatically.
+        2. Analyze the best conversion path (Website vs WhatsApp vs Call) and explain why.
+        3. Explain the Psychological Angle in HINDI.
+        4. Write Ad Copy in "${lang}".
+        5. Write a 30s Video Script (Hook, Body, CTA).
+        6. Write a highly detailed Image Generation Prompt.
         
         OUTPUT STRICTLY AS JSON:
         {
-            "psychology": "Explain the marketing angle used.",
-            "visual_prompt": "Photorealistic prompt for image generation...",
-            "primary_text": "Main ad caption in ${lang}. Use emojis.",
-            "headline": "Punchy headline in ${lang}.",
-            "description": "Short link description.",
-            "cta_button": "The exact button text (e.g. Shop Now).",
-            "cta_reason": "Why this button was chosen.",
-            "targeting": "List of 5 precise interests.",
-            "video_script": "Scene 1 (0-3s): [Visual] - Audio... \\nScene 2 (3-15s): ... \\nScene 3 (15-30s): ..."
+            "audience_persona": "Detailed audience description",
+            "conversion_path": "Recommended path (e.g. WhatsApp for leads) and why",
+            "psychology_hindi": "Explanation in Hindi script",
+            "format_advice": "Single Image vs Video vs Carousel",
+            "primary_text": "Main text in ${lang}",
+            "headline": "Headline in ${lang}",
+            "cta_button": "Shop Now / Learn More / etc",
+            "video_script": "Detailed 30s script...",
+            "visual_prompt_text": "Detailed prompt for AI image generator..."
         }`;
 
         try {
@@ -263,32 +293,34 @@
 
             const data = await response.json();
 
-            if (response.status === 429) {
-                throw new Error("Quota Exceeded. Please try again tomorrow.");
-            }
-
+            if (response.status === 429) throw new Error("Quota Exceeded.");
             if (!data.candidates) throw new Error("AI Generation Failed.");
 
             const text = data.candidates[0].content.parts[0].text;
             const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
             const adData = JSON.parse(jsonStr);
 
-            // Populate Strategy Data
-            document.getElementById('resPsychology').innerText = adData.psychology;
-            document.getElementById('resTargeting').innerText = adData.targeting;
-            document.getElementById('resScript').innerText = adData.video_script;
-            document.getElementById('resCTAExplanation').innerText = `${adData.cta_button} - ${adData.cta_reason}`;
+            // 1. Populate Strategy Tab
+            document.getElementById('resConversionPath').innerHTML = `<div class="conv-badge">${adData.conversion_path}</div>`;
+            document.getElementById('resPsychology').innerText = adData.psychology_hindi;
+            document.getElementById('resAudience').innerText = adData.audience_persona;
+            document.getElementById('resFormat').innerText = adData.format_advice;
             
-            // Populate Mockup
+            // Mockup Data
             document.getElementById('mockupPrimary').innerText = adData.primary_text;
             document.getElementById('mockupHeadline').innerText = adData.headline;
-            document.getElementById('mockupDesc').innerText = adData.description;
-            document.getElementById('mockupCTA').innerText = adData.cta_button; // Dynamic Button Text
+            document.getElementById('mockupCTA').innerText = adData.cta_button;
             document.getElementById('langTag').innerText = lang;
 
-            // Generate Image via Pollinations
+            // 2. Populate Script Tab
+            document.getElementById('resScript').innerText = `TOPIC: ${topic}\nGOAL: ${purpose}\n\n${adData.video_script}`;
+
+            // 3. Populate Prompt Tab
+            document.getElementById('resPrompt').innerText = `PRODUCT: ${topic}\n\nPROMPT:\n${adData.visual_prompt_text}`;
+
+            // 4. Generate Image (Pollinations)
             const seed = Math.floor(Math.random() * 9999);
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(adData.visual_prompt)}?width=1080&height=1080&nologo=true&seed=${seed}&model=flux`;
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(adData.visual_prompt_text)}?width=1080&height=1080&nologo=true&seed=${seed}&model=flux`;
             
             const imgEl = document.getElementById('mockupImg');
             imgEl.src = imageUrl;
@@ -297,15 +329,30 @@
                 imgEl.style.display = 'block';
             };
 
-            results.style.display = 'grid';
+            // Show UI & Dots
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('tabsBar').style.display = 'flex';
+            
+            // Activate Tab 1
+            switchTab('tab1');
+            
+            // Add dots to other tabs
+            document.getElementById('btnTab2').classList.add('has-data');
+            document.getElementById('btnTab3').classList.add('has-data');
+
             trackUsage();
 
         } catch (err) {
-            errorBox.innerText = "Error: " + err.message;
-            errorBox.style.display = 'block';
-        } finally {
-            loader.style.display = 'none';
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('errorBox').innerText = "Error: " + err.message;
+            document.getElementById('errorBox').style.display = 'block';
         }
+    }
+
+    function copyText(id) {
+        const el = document.getElementById(id);
+        navigator.clipboard.writeText(el.innerText);
+        alert("Copied!");
     }
 </script>
 
