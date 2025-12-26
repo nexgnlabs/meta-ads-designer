@@ -3,52 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meta Ads Command Center</title>
+    <title>Meta Ads Architect Pro</title>
     <style>
-        :root { --meta-blue: #1877f2; --ig-gradient: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); --bg: #0f0f0f; --card: #1e1e1e; --text: #fff; --success: #00e676; }
+        :root { --meta-blue: #1877f2; --bg: #0f0f0f; --card: #1e1e1e; --text: #fff; --accent: #00e676; --gold: #ffd700; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
-        .app-shell { max-width: 1000px; margin: 0 auto; background: var(--card); border: 1px solid #333; border-radius: 16px; padding: 30px; box-shadow: 0 10px 50px rgba(0,0,0,0.7); }
+        .app-shell { max-width: 1100px; margin: 0 auto; background: var(--card); border: 1px solid #333; border-radius: 16px; padding: 30px; box-shadow: 0 10px 50px rgba(0,0,0,0.7); }
 
         /* Header */
         h1 { text-align: center; margin-top: 0; background: linear-gradient(90deg, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-        .badge { background: #222; border: 1px solid #444; padding: 4px 10px; border-radius: 20px; font-size: 11px; text-transform: uppercase; color: var(--meta-blue); font-weight: bold; }
+        .badge { background: #222; border: 1px solid #444; padding: 4px 12px; border-radius: 20px; font-size: 11px; text-transform: uppercase; color: var(--meta-blue); font-weight: bold; }
         .usage-bar { text-align: center; font-size: 12px; color: #666; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 20px; }
 
+        /* Grid Layout for Inputs */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
+        
         /* Inputs */
         label { display: block; margin-top: 15px; font-size: 11px; color: #888; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
         input, textarea, select { width: 100%; padding: 14px; background: #0a0a0a; border: 1px solid #333; color: #fff; border-radius: 8px; margin-top: 6px; box-sizing: border-box; font-family: inherit; transition: 0.2s; }
-        input:focus, textarea:focus { border-color: var(--meta-blue); outline: none; box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2); }
+        input:focus, textarea:focus, select:focus { border-color: var(--meta-blue); outline: none; box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2); }
 
-        /* Buttons */
-        .btn-generate { width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 25px; background: var(--meta-blue); color: white; text-transform: uppercase; transition: 0.2s; }
-        .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4); }
+        /* Generate Button */
+        .btn-generate { width: 100%; padding: 18px; border: none; border-radius: 10px; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 25px; background: linear-gradient(45deg, var(--meta-blue), #006aff); color: white; text-transform: uppercase; transition: 0.2s; }
+        .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(24, 119, 242, 0.4); }
         .btn-generate:disabled { background: #444; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* Layout Grid */
-        .output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; display: none; }
+        /* Output Area */
+        .output-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; margin-top: 40px; display: none; }
         
-        /* Strategy Column */
-        .strategy-card { background: #111; padding: 20px; border-radius: 12px; border: 1px solid #333; height: 100%; }
-        .data-row { margin-bottom: 15px; }
-        .data-label { color: var(--meta-blue); font-size: 12px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 5px; }
-        .data-value { font-size: 14px; color: #ddd; white-space: pre-wrap; background: #1a1a1a; padding: 10px; border-radius: 6px; border: 1px solid #2a2a2a; }
-
-        /* Preview Column (Mockup) */
-        .ad-preview { background: #fff; color: #000; border-radius: 8px; overflow: hidden; max-width: 400px; margin: 0 auto; box-shadow: 0 5px 20px rgba(0,0,0,0.5); font-family: Helvetica, Arial, sans-serif; }
+        /* Strategy Card */
+        .strategy-card { background: #111; padding: 25px; border-radius: 12px; border: 1px solid #333; height: fit-content; }
+        .data-row { margin-bottom: 20px; }
+        .data-label { color: var(--meta-blue); font-size: 11px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 1px; }
+        .data-value { font-size: 14px; color: #ddd; white-space: pre-wrap; background: #1a1a1a; padding: 12px; border-radius: 6px; border: 1px solid #2a2a2a; line-height: 1.6; }
+        
+        /* Ad Mockup */
+        .mockup-container { position: sticky; top: 20px; }
+        .ad-preview { background: #fff; color: #000; border-radius: 8px; overflow: hidden; max-width: 400px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: Helvetica, Arial, sans-serif; border: 1px solid #ccc; }
         .ad-header { padding: 12px; display: flex; align-items: center; }
-        .ad-avatar { width: 40px; height: 40px; background: #ddd; border-radius: 50%; margin-right: 10px; }
-        .ad-brand-name { font-weight: bold; font-size: 14px; }
-        .ad-sponsored { font-size: 12px; color: #666; }
-        .ad-text-top { padding: 0 12px 12px 12px; font-size: 14px; line-height: 1.4; }
-        .ad-image-container { width: 100%; aspect-ratio: 1/1; background: #eee; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .ad-image-container img { width: 100%; height: 100%; object-fit: cover; }
-        .ad-footer { padding: 12px; background: #f0f2f5; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ddd; }
-        .ad-headline-area { flex: 1; margin-right: 10px; }
-        .ad-headline { font-weight: bold; font-size: 16px; margin-bottom: 2px; }
-        .ad-desc { font-size: 12px; color: #666; }
-        .ad-cta-btn { background: #e4e6eb; color: #050505; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 14px; text-decoration: none; border: 1px solid #ccc; }
+        .ad-avatar { width: 40px; height: 40px; background: linear-gradient(45deg, #ddd, #eee); border-radius: 50%; margin-right: 10px; }
+        .ad-brand-name { font-weight: bold; font-size: 14px; color: #050505; }
+        .ad-sponsored { font-size: 12px; color: #65676b; }
+        .ad-text-top { padding: 0 12px 12px 12px; font-size: 14px; line-height: 1.4; color: #050505; white-space: pre-line; }
+        .ad-image-container { width: 100%; aspect-ratio: 1/1; background: #f0f2f5; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .ad-image-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .ad-footer { padding: 12px; background: #f0f2f5; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e4e6eb; }
+        .ad-headline-area { flex: 1; margin-right: 15px; }
+        .ad-footer-domain { font-size: 12px; color: #65676b; margin-bottom: 2px; text-transform: lowercase; }
+        .ad-headline { font-weight: bold; font-size: 16px; margin-bottom: 2px; color: #050505; line-height: 1.2; }
+        .ad-desc { font-size: 12px; color: #65676b; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ad-cta-btn { background: #e4e6eb; color: #050505; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 14px; text-decoration: none; white-space: nowrap; }
 
-        #loader { display: none; text-align: center; color: var(--meta-blue); margin-top: 25px; font-weight: bold; letter-spacing: 1px; }
+        /* Loader & Messages */
+        #loader { display: none; text-align: center; color: var(--meta-blue); margin-top: 25px; font-weight: bold; letter-spacing: 1px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 50% { opacity: 0.5; } }
         .error-msg { color: #ff6b6b; background: rgba(255, 107, 107, 0.1); padding: 15px; border-radius: 8px; margin-top: 20px; display: none; text-align: center; border: 1px solid #ff6b6b; }
     </style>
 </head>
@@ -56,65 +63,103 @@
 
 <div class="app-shell">
     <div style="text-align: center;">
-        <span class="badge">🤖 AI Marketing Suite</span>
-        <h1>Meta Ads Command Center</h1>
+        <span class="badge">💎 Ultimate Edition v2.0</span>
+        <h1>Meta Ads Architect</h1>
     </div>
 
     <div class="usage-bar">Daily Limit: <span id="used" style="color: var(--success); font-weight: bold;">0</span> / 30 Campaigns</div>
 
-    <label>Gemini API Key</label>
-    <input type="password" id="apiKey" placeholder="Paste your API Key here...">
+    <div class="input-grid">
+        <div style="grid-column: span 2;">
+            <label>Gemini API Key (Saved Locally)</label>
+            <input type="password" id="apiKey" placeholder="Paste your API Key here...">
+        </div>
+        
+        <div>
+            <label>Product / Service</label>
+            <input type="text" id="topic" placeholder="e.g. Luxury Ayurveda Skincare Brand">
+        </div>
+        
+        <div>
+            <label>Target Audience</label>
+            <input type="text" id="audience" placeholder="e.g. Women 25-45 in Mumbai/Delhi">
+        </div>
 
-    <label>What are you advertising?</label>
-    <input type="text" id="topic" placeholder="e.g. AI-Powered Coffee Machine, Dropshipping Course, Luxury Watch...">
+        <div>
+            <label>Ad Purpose (The Goal)</label>
+            <select id="purpose">
+                <option value="Sales / Conversions">💰 Sales / Conversions (Maximize Revenue)</option>
+                <option value="Leads / Signups">📝 Leads / Signups (Get Data)</option>
+                <option value="Brand Awareness">📢 Brand Awareness (Max Reach)</option>
+                <option value="App Installs">📱 App Installs</option>
+                <option value="Website Traffic">🖱️ Website Traffic (High CTR)</option>
+            </select>
+        </div>
 
-    <label>Target Audience (Optional)</label>
-    <input type="text" id="audienceInput" placeholder="e.g. Busy professionals in USA...">
+        <div>
+            <label>Ad Language</label>
+            <select id="language">
+                <option value="Hinglish (Natural Indian Mix)">🇮🇳 Hinglish (Conversational)</option>
+                <option value="Day-to-Day Hindi">🕉️ Day-to-Day Simple Hindi</option>
+                <option value="Global English">🌎 Global English</option>
+                <option value="Simple Marathi">🚩 Simple Marathi</option>
+            </select>
+        </div>
+    </div>
 
-    <button class="btn-generate" id="genBtn" onclick="generateAd()">🚀 Launch Ad Simulation</button>
+    <button class="btn-generate" id="genBtn" onclick="generateAd()">🚀 Architect Winning Ad</button>
 
-    <div id="loader">💎 GEMINI IS DESIGNING YOUR CAMPAIGN...</div>
+    <div id="loader">💎 ANALYZING PURPOSE & DESIGNING CREATIVE...</div>
     <div id="errorBox" class="error-msg"></div>
 
     <div id="results" class="output-grid">
         <div class="strategy-card">
-            <h3 style="margin-top:0; color:white; border-bottom:1px solid #333; padding-bottom:10px;">📊 Campaign Strategy</h3>
+            <h3 style="margin-top:0; color:white; border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:20px;">📊 Strategic Blueprint</h3>
             
             <div class="data-row">
-                <span class="data-label">Winning Angle</span>
-                <div class="data-value" id="resStrategy"></div>
+                <span class="data-label">Recommended Format & Angle</span>
+                <div class="data-value" id="resFormat" style="border-left: 3px solid var(--accent);"></div>
             </div>
             
             <div class="data-row">
-                <span class="data-label">Targeting Interests</span>
+                <span class="data-label">Psychological Hook (Why this works?)</span>
+                <div class="data-value" id="resPsychology"></div>
+            </div>
+
+            <div class="data-row">
+                <span class="data-label">Detailed Targeting Set</span>
                 <div class="data-value" id="resTargeting"></div>
             </div>
 
             <div class="data-row">
-                <span class="data-label">Visual Prompt (For Midjourney/DALL-E)</span>
-                <div class="data-value" id="resImagePrompt" style="font-size:12px; color:#888;"></div>
+                <span class="data-label">AI Image Prompt (Copy for Midjourney/Flux)</span>
+                <div class="data-value" id="resImagePrompt" style="font-size:12px; color:#888; font-family:monospace;"></div>
             </div>
         </div>
 
-        <div>
-            <h3 style="margin-top:0; text-align:center; color:#888; font-size:14px; margin-bottom:15px;">LIVE MOCKUP PREVIEW</h3>
+        <div class="mockup-container">
+            <h3 style="margin-top:0; text-align:center; color:#888; font-size:14px; margin-bottom:15px; letter-spacing:1px;">LIVE FEED PREVIEW</h3>
             <div class="ad-preview">
                 <div class="ad-header">
                     <div class="ad-avatar"></div>
                     <div>
                         <div class="ad-brand-name">Your Brand</div>
-                        <div class="ad-sponsored">Sponsored · 🌍</div>
+                        <div class="ad-sponsored">Sponsored · <span id="langTag"></span></div>
                     </div>
                 </div>
-                <div class="ad-text-top" id="mockupPrimary">Loading copy...</div>
+                
+                <div class="ad-text-top" id="mockupPrimary">Generating High-Converting Copy...</div>
+                
                 <div class="ad-image-container">
                     <img id="mockupImg" src="" alt="Ad Creative">
-                    <div id="imgLoader" style="position:absolute; color:#000;">Generating Visual...</div>
+                    <div id="imgLoader" style="position:absolute; color:#666; font-size:12px; font-weight:bold;">✨ RENDERING AI VISUAL...</div>
                 </div>
+                
                 <div class="ad-footer">
                     <div class="ad-headline-area">
+                        <div class="ad-footer-domain">yourwebsite.com</div>
                         <div class="ad-headline" id="mockupHeadline">Headline...</div>
-                        <div class="ad-desc" id="mockupDesc">Description...</div>
+                        <div class="ad-desc" id="mockupDesc">Link Description...</div>
                     </div>
                     <a href="#" class="ad-cta-btn" id="mockupCTA">Learn More</a>
                 </div>
@@ -128,7 +173,7 @@
 
     window.onload = () => {
         updateUsageUI();
-        const savedKey = localStorage.getItem('_meta_ad_key');
+        const savedKey = localStorage.getItem('_meta_pro_key');
         if (savedKey) document.getElementById('apiKey').value = savedKey;
     };
 
@@ -137,33 +182,35 @@
         document.getElementById('used').innerText = usage;
         if (usage >= MAX_DAILY) {
             document.getElementById('genBtn').disabled = true;
-            document.getElementById('genBtn').innerText = "Daily Limit Reached";
+            document.getElementById('genBtn').innerText = "Daily Limit Reached (30/30)";
         }
     }
 
     function getUsage() {
         const date = new Date().toISOString().split('T')[0];
-        const data = JSON.parse(localStorage.getItem('_meta_ad_usage') || '{}');
+        const data = JSON.parse(localStorage.getItem('_meta_pro_usage') || '{}');
         return data[date] || 0;
     }
 
     function trackUsage() {
         const date = new Date().toISOString().split('T')[0];
-        const data = JSON.parse(localStorage.getItem('_meta_ad_usage') || '{}');
+        const data = JSON.parse(localStorage.getItem('_meta_pro_usage') || '{}');
         data[date] = (data[date] || 0) + 1;
-        localStorage.setItem('_meta_ad_usage', JSON.stringify(data));
+        localStorage.setItem('_meta_pro_usage', JSON.stringify(data));
         updateUsageUI();
     }
 
     async function generateAd() {
         const key = document.getElementById('apiKey').value.trim();
         const topic = document.getElementById('topic').value;
-        const audience = document.getElementById('audienceInput').value || "General Audience";
+        const audience = document.getElementById('audience').value || "Broad Audience";
+        const purpose = document.getElementById('purpose').value;
+        const lang = document.getElementById('language').value;
         
-        if (!key || !topic) return alert("Please enter API Key and Topic!");
+        if (!key || !topic) return alert("Please enter API Key and Product Topic!");
         if (getUsage() >= MAX_DAILY) return alert("Daily limit reached!");
 
-        localStorage.setItem('_meta_ad_key', key);
+        localStorage.setItem('_meta_pro_key', key);
         
         // UI Reset
         const loader = document.getElementById('loader');
@@ -176,22 +223,28 @@
         document.getElementById('mockupImg').style.display = 'none';
         document.getElementById('imgLoader').style.display = 'block';
 
-        // Gemini Prompt
+        // Advanced Prompt Logic
         const prompt = `Act as a World-Class Meta Ads Strategist.
-        Product/Topic: "${topic}"
+        Product: "${topic}"
         Target Audience: "${audience}"
+        Campaign Goal: "${purpose}"
+        Language: "${lang}"
         
-        Task: Create a high-conversion Facebook/Instagram ad campaign.
+        TASK:
+        1. Suggest the specific Ad Format (Single Image vs Carousel vs Video) best suited for this Goal.
+        2. Write High-Converting Ad Copy (Primary Text, Headline) in "${lang}".
+        3. Create a detailed Visual Prompt for an AI image generator that represents the best possible creative for this ad.
         
-        Output strictly as JSON with these keys:
+        OUTPUT STRICTLY AS JSON:
         {
-            "strategy": "1 sentence explaining the psychological angle (e.g. FOMO, Social Proof)",
-            "visual_prompt": "A highly detailed, photorealistic prompt for an AI image generator to create the ad creative. Focus on lighting, composition, and product placement. Max 20 words.",
-            "primary_text": "The main ad caption. Use emojis. Focus on pain points and solution.",
-            "headline": "Short, punchy headline (max 6 words)",
-            "description": "Short link description (e.g. Free Shipping)",
-            "cta": "Shop Now / Learn More / Sign Up",
-            "targeting": "List of 5 precise interests/demographics to target"
+            "format_suggestion": "e.g. Use Single Image because...",
+            "psychology": "Explain the marketing angle (e.g. Scarcity, Social Proof).",
+            "visual_prompt": "Photorealistic prompt description for the image...",
+            "primary_text": "The main caption text in ${lang}. Use emojis.",
+            "headline": "Punchy headline in ${lang} (Max 6 words).",
+            "description": "Short link description (e.g. Free Shipping).",
+            "cta": "Shop Now / Sign Up / etc.",
+            "targeting": "List of 5 precise interests."
         }`;
 
         try {
@@ -214,8 +267,9 @@
             const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
             const adData = JSON.parse(jsonStr);
 
-            // Populate Text Data
-            document.getElementById('resStrategy').innerText = adData.strategy;
+            // Populate Strategy Data
+            document.getElementById('resFormat').innerText = adData.format_suggestion;
+            document.getElementById('resPsychology').innerText = adData.psychology;
             document.getElementById('resTargeting').innerText = adData.targeting;
             document.getElementById('resImagePrompt').innerText = adData.visual_prompt;
             
@@ -224,9 +278,10 @@
             document.getElementById('mockupHeadline').innerText = adData.headline;
             document.getElementById('mockupDesc').innerText = adData.description;
             document.getElementById('mockupCTA').innerText = adData.cta;
+            document.getElementById('langTag').innerText = lang;
 
-            // Generate Image via Pollinations
-            const seed = Math.floor(Math.random() * 1000);
+            // Generate Image via Pollinations (Flux Model for realism)
+            const seed = Math.floor(Math.random() * 9999);
             const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(adData.visual_prompt)}?width=1080&height=1080&nologo=true&seed=${seed}&model=flux`;
             
             const imgEl = document.getElementById('mockupImg');
