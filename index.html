@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meta Ads Architect v4.0</title>
+    <title>Meta Ads Architect v5.0</title>
     <style>
         :root { --meta-blue: #1877f2; --bg: #0f0f0f; --card: #1e1e1e; --text: #fff; --accent: #00e676; --notification: #ff3b30; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
@@ -77,7 +77,7 @@
 
 <div class="app-shell">
     <div style="text-align: center;">
-        <h1>Meta Ads Architect v4.0</h1>
+        <h1>Meta Ads Architect v5.0</h1>
     </div>
 
     <div class="usage-bar">Daily Limit: <span id="used" style="color: var(--success); font-weight: bold;">0</span> / 30 Campaigns</div>
@@ -96,17 +96,17 @@
         <div>
             <label>Ad Purpose</label>
             <select id="purpose">
-                <option value="Sales">💰 Maximum Sales</option>
+                <option value="Sales">💰 Maximum Sales (Conversion)</option>
                 <option value="Leads">📝 High Quality Leads</option>
                 <option value="Awareness">📢 Brand Awareness</option>
-                <option value="Traffic">🖱️ Cheap Link Clicks</option>
+                <option value="Traffic">🖱️ Website Traffic</option>
             </select>
         </div>
 
         <div>
-            <label>Ad Language</label>
+            <label>Ad Copy Language</label>
             <select id="language">
-                <option value="Hinglish">🇮🇳 Hinglish (Natural Mix)</option>
+                <option value="Hinglish">🇮🇳 Hinglish (Best for India)</option>
                 <option value="Hindi">🕉️ Day-to-Day Hindi</option>
                 <option value="English">🌎 Global English</option>
             </select>
@@ -120,7 +120,7 @@
 
     <div class="tabs" id="tabsBar" style="display:none;">
         <button class="tab-btn active" id="btnTab1" onclick="switchTab('tab1')">📊 Strategy & Mockup</button>
-        <button class="tab-btn" id="btnTab2" onclick="switchTab('tab2')">🎥 Video Script</button>
+        <button class="tab-btn" id="btnTab2" onclick="switchTab('tab2')">🎥 Video Script (Hindi)</button>
         <button class="tab-btn" id="btnTab3" onclick="switchTab('tab3')">🎨 Creative Prompt</button>
     </div>
 
@@ -134,7 +134,7 @@
             </div>
 
             <div class="data-row">
-                <span class="data-label">Psychological Angle (Hindi Explanation)</span>
+                <span class="data-label">Psychological Angle (Simple Hindi)</span>
                 <div class="data-value" id="resPsychology"></div>
             </div>
 
@@ -196,7 +196,7 @@
 
     window.onload = () => {
         updateUsageUI();
-        const savedKey = localStorage.getItem('_meta_v4_key');
+        const savedKey = localStorage.getItem('_meta_v5_key');
         if (savedKey) document.getElementById('apiKey').value = savedKey;
     };
 
@@ -211,15 +211,15 @@
 
     function getUsage() {
         const date = new Date().toISOString().split('T')[0];
-        const data = JSON.parse(localStorage.getItem('_meta_v4_usage') || '{}');
+        const data = JSON.parse(localStorage.getItem('_meta_v5_usage') || '{}');
         return data[date] || 0;
     }
 
     function trackUsage() {
         const date = new Date().toISOString().split('T')[0];
-        const data = JSON.parse(localStorage.getItem('_meta_v4_usage') || '{}');
+        const data = JSON.parse(localStorage.getItem('_meta_v5_usage') || '{}');
         data[date] = (data[date] || 0) + 1;
-        localStorage.setItem('_meta_v4_usage', JSON.stringify(data));
+        localStorage.setItem('_meta_v5_usage', JSON.stringify(data));
         updateUsageUI();
     }
 
@@ -228,12 +228,11 @@
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         
-        // Match button to tab
         if(tabId === 'tab1') document.getElementById('btnTab1').classList.add('active');
         if(tabId === 'tab2') document.getElementById('btnTab2').classList.add('active');
         if(tabId === 'tab3') document.getElementById('btnTab3').classList.add('active');
         
-        // Remove notification dot on click
+        // Remove notification dot
         document.getElementById('btn' + tabId.charAt(0).toUpperCase() + tabId.slice(1)).classList.remove('has-data');
     }
 
@@ -246,7 +245,7 @@
         if (!key || !topic) return alert("Please enter API Key and Topic!");
         if (getUsage() >= MAX_DAILY) return alert("Daily limit reached!");
 
-        localStorage.setItem('_meta_v4_key', key);
+        localStorage.setItem('_meta_v5_key', key);
         
         // UI Reset
         document.getElementById('loader').style.display = 'block';
@@ -256,30 +255,29 @@
         document.getElementById('mockupImg').style.display = 'none';
         document.getElementById('imgLoader').style.display = 'block';
 
-        // Advanced Logic Prompt
-        const prompt = `Act as a Meta Ads Expert.
+        const prompt = `Act as a Top 1% Meta Ads Strategist for the Indian Market.
         Product: "${topic}"
         Goal: "${purpose}"
-        Language: "${lang}"
+        Copy Language: "${lang}"
         
         TASK:
-        1. Define the best Target Audience for this product automatically.
-        2. Analyze the best conversion path (Website vs WhatsApp vs Call) and explain why.
-        3. Explain the Psychological Angle in HINDI.
+        1. Define the best Target Audience automatically based on the product.
+        2. Analyze the best conversion path (Website vs WhatsApp vs Call). E.g., High ticket = Call/WhatsApp. Low ticket = Website.
+        3. Explain the Psychological Strategy in SIMPLE DAY-TO-DAY HINDI (Roman script or Devanagari) so a beginner understands WHY this ad works.
         4. Write Ad Copy in "${lang}".
-        5. Write a 30s Video Script (Hook, Body, CTA).
-        6. Write a highly detailed Image Generation Prompt.
+        5. Write a 30-Second Video Script in SIMPLE DAY-TO-DAY HINDI (spoken style).
+        6. Write a highly detailed AI Image Prompt.
         
         OUTPUT STRICTLY AS JSON:
         {
-            "audience_persona": "Detailed audience description",
-            "conversion_path": "Recommended path (e.g. WhatsApp for leads) and why",
-            "psychology_hindi": "Explanation in Hindi script",
-            "format_advice": "Single Image vs Video vs Carousel",
-            "primary_text": "Main text in ${lang}",
-            "headline": "Headline in ${lang}",
+            "audience_persona": "Detailed audience targeting...",
+            "conversion_path": "Recommended path (e.g. WhatsApp for leads) and reasoning.",
+            "psychology_hindi": "Explanation in simple Hindi...",
+            "format_advice": "Single Image vs Video vs Carousel and why.",
+            "primary_text": "Main ad caption in ${lang}.",
+            "headline": "Headline in ${lang}.",
             "cta_button": "Shop Now / Learn More / etc",
-            "video_script": "Detailed 30s script...",
+            "video_script": "Scene 1 (0-3s): [Visual] - Audio (Hindi)... \\nScene 2...",
             "visual_prompt_text": "Detailed prompt for AI image generator..."
         }`;
 
@@ -300,7 +298,7 @@
             const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
             const adData = JSON.parse(jsonStr);
 
-            // 1. Populate Strategy Tab
+            // 1. Strategy Tab
             document.getElementById('resConversionPath').innerHTML = `<div class="conv-badge">${adData.conversion_path}</div>`;
             document.getElementById('resPsychology').innerText = adData.psychology_hindi;
             document.getElementById('resAudience').innerText = adData.audience_persona;
@@ -312,13 +310,13 @@
             document.getElementById('mockupCTA').innerText = adData.cta_button;
             document.getElementById('langTag').innerText = lang;
 
-            // 2. Populate Script Tab
-            document.getElementById('resScript').innerText = `TOPIC: ${topic}\nGOAL: ${purpose}\n\n${adData.video_script}`;
+            // 2. Script Tab
+            document.getElementById('resScript').innerText = `TOPIC: ${topic}\n\n${adData.video_script}`;
 
-            // 3. Populate Prompt Tab
+            // 3. Prompt Tab
             document.getElementById('resPrompt').innerText = `PRODUCT: ${topic}\n\nPROMPT:\n${adData.visual_prompt_text}`;
 
-            // 4. Generate Image (Pollinations)
+            // 4. Generate Image
             const seed = Math.floor(Math.random() * 9999);
             const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(adData.visual_prompt_text)}?width=1080&height=1080&nologo=true&seed=${seed}&model=flux`;
             
@@ -329,14 +327,11 @@
                 imgEl.style.display = 'block';
             };
 
-            // Show UI & Dots
             document.getElementById('loader').style.display = 'none';
             document.getElementById('tabsBar').style.display = 'flex';
-            
-            // Activate Tab 1
             switchTab('tab1');
             
-            // Add dots to other tabs
+            // Add dots
             document.getElementById('btnTab2').classList.add('has-data');
             document.getElementById('btnTab3').classList.add('has-data');
 
